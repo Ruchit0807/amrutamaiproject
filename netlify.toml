@@ -3,13 +3,13 @@
   base = "amrutam-ai"
   
   # Directory that contains the deploy-ready HTML files and assets
-  publish = "amrutam-ai/.next"
+  publish = ".next"
   
   # Default build command
   command = "npm run build"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "18.17.0"
 
 # Redirect rules for SPA
 [[redirects]]
