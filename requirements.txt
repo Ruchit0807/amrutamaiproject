@@ -1,0 +1,8 @@
+torch
+torchvision
+pillow
+gradio
+efficientnet_pytorch
+matplotlib
+numpy
+requests
