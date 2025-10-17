@@ -2,8 +2,8 @@
   # Directory to change to before starting a build
   base = "amrutam-ai"
   
-  # Directory that contains the deploy-ready HTML files and assets
-  publish = "out"
+  # Next.js on Netlify publishes the ".next" output
+  publish = ".next"
   
   # Default build command
   command = "npm run build"
@@ -11,11 +11,7 @@
 [build.environment]
   NODE_VERSION = "20.11.0"
 
-# Redirect rules for SPA
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Next.js handles routes; no SPA catch-all redirect needed
 
 # Headers for security
 [[headers]]
@@ -25,3 +21,7 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Enable Netlify Next.js runtime
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

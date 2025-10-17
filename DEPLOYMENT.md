@@ -10,16 +10,18 @@ The frontend is deployed to Netlify and configured to work with a separate Pytho
    - Base directory: `amrutam-ai`
    - Build command: `npm run build`
    - Publish directory: `amrutam-ai/.next`
+   - Plugin: `@netlify/plugin-nextjs`
 
-2. **Environment Variables:**
-   - `NEXT_PUBLIC_API_URL`: URL of your Python backend (e.g., Heroku, Railway, etc.)
+2. **Environment Variables (Netlify > Site Settings > Environment):**
+   - `NEXT_PUBLIC_API_URL` — URL of your Python backend (e.g., `https://your-backend.example.com`)
+   - Ensure CORS on backend allows the Netlify domain
 
 ### Current Setup
 
 The `netlify.toml` file is configured to:
-- Build only the Next.js frontend
-- Ignore Python dependencies
-- Set up proper redirects for SPA routing
+- Build only the Next.js frontend in `amrutam-ai`
+- Publish `.next` output and enable API routes via the Netlify Next.js runtime
+- No catch‑all SPA redirect (Next.js handles routing)
 
 ## Backend Deployment (Separate Service)
 
@@ -42,6 +44,7 @@ The Python backend with AI models should be deployed separately to a service tha
 1. Create a new repository for the Python backend
 2. Deploy the Python files to your chosen service
 3. Update the `NEXT_PUBLIC_API_URL` environment variable in Netlify
+4. Enable CORS to include your Netlify site origin
 
 ## API Endpoints
 
