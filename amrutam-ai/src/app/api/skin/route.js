@@ -9,38 +9,35 @@ export async function POST(request) {
     // Check if we have a backend URL configured
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
     
-    if (backendUrl) {
-      // Use external backend
-      const response = await fetch(`${backendUrl}/api/skin`, {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Backend error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      return Response.json(data);
+    if (!backendUrl) {
+      return new Response(
+        JSON.stringify({ error: "Missing NEXT_PUBLIC_API_URL. Configure Python backend URL in Netlify env." }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
-    // Fallback: Return mock data for demo purposes
-    const mockData = {
-      disease: "Demo Skin Condition",
-      confidence: 0.85,
-      care: [
-        "Apply gentle moisturizer twice daily",
-        "Use mild, fragrance-free cleanser",
-        "Avoid harsh chemicals and excessive sun exposure"
-      ],
-      tips: [
-        "Keep skin hydrated with adequate water intake",
-        "Use natural ingredients like aloe vera",
-        "Maintain a balanced diet rich in antioxidants"
-      ]
-    };
+    // Forward to external Python backend with multipart form-data
+    const upstream = new FormData();
+    // Preserve filename and content-type if available (Next.js provides a Blob/File)
+    upstream.append(
+      'image',
+      image,
+      typeof image.name === 'string' && image.name.length > 0 ? image.name : 'upload.jpg'
+    );
+
+    const response = await fetch(`${backendUrl}/api/skin`, {
+      method: 'POST',
+      body: upstream,
+      // Let fetch set proper multipart boundary headers
+    });
     
-    return Response.json(mockData);
+    if (!response.ok) {
+      const body = await response.text().catch(() => "");
+      throw new Error(`Backend error: ${response.status} ${body}`);
+    }
+    
+    const data = await response.json();
+    return Response.json(data);
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message || "Invalid request" }), { status: 400 });
   }
