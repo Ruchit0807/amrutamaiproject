@@ -448,14 +448,13 @@ treatment_info = {
 # ✅ STEP 4: Google API Setup (AUTOMATIC)
 # ==============================================================
 
-# 🔑 Your Google Maps API key — pre-filled here.
-# Replace the below string with your own valid API key:
-GOOGLE_API_KEY = "AIzaSyAFtMxYO0cN--eTlKMJObp9wdTI49ea5SM"
+# 🔑 Google Maps API key read from environment (set GOOGLE_API_KEY)
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 
 def find_nearby_clinics(location_text):
     """Uses Google Places Text Search API to find skin clinics near the entered city"""
     if not GOOGLE_API_KEY:
-        return "⚠️ Google API key not found in code."
+        return "⚠️ Missing GOOGLE_API_KEY. Please set it in environment."
 
     url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query=dermatology+clinic+near+{location_text}&key={GOOGLE_API_KEY}"
     response = requests.get(url)

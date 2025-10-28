@@ -1,21 +1,18 @@
-# AMRUTAM AI Project
+# 🧠 AI Skin Disease Classifier (EfficientNet-B0)
 
-AMRUTAM AI blends classical Ayurvedic wisdom with modern AI to provide personalized remedies and AI-based skin wellness insights.
+A deep learning–based web app that predicts 22 types of skin diseases or acne conditions using **EfficientNet-B0**.
 
-## Apps in this repo
-- Next.js web app in `amrutam-ai/` with pages for remedies, skin analysis, and more
-- Python backend utilities and models for Ayurvedic reasoning and skin disease prediction
+---
 
-## Getting Started
-1. Install Node.js dependencies for the Next.js app:
-   - `cd amrutam-ai`
-   - `npm install`
-   - `npm run dev`
-2. Python dependencies (optional features):
-   - `pip install -r requirements.txt`
+## 🚀 Features
+- Upload any skin image (face, hand, lesion, etc.)
+- Predicts top probable diseases with confidence scores
+- Powered by EfficientNet-B0 and PyTorch
+- Interactive Gradio web UI
+- Deployable on Hugging Face, Render, or local machine
 
-## Git LFS
-Large files like model weights (`best_efficientnet.pth`) are tracked with Git LFS.
+---
 
-## License
-MIT
+## 🛠️ Setup (Run Locally using Cursor or Warp)
+1. Clone or download this folder.
+2. Place your trained model file here:

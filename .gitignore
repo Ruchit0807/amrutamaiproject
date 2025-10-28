@@ -1,31 +1,33 @@
-# Node / Next.js
-node_modules/
-.next/
-out/
-.vercel/
-.env*
-coverage/
-build/
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python
+﻿# Python
+venv/
+.env
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.venv/
-.env/
-.ipynb_checkpoints/
+.Python
+*.log
 
-# IDE
+# Node
+amrutam-ai/node_modules/
+amrutam-ai/.next/
+amrutam-ai/.env*
+
+# OS/Editor
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
+
+# Model and data caches
+*.pt
+*.pth
+*.onnx
+/data/
+/models/
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+

@@ -1,0 +1,12 @@
+{
+  "project": {
+    "name": "amrutam-ai-frontend"
+  },
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm ci",
+  "framework": "nextjs",
+  "env": {
+    "BACKEND_URL": "http://localhost:8000"
+  }
+}

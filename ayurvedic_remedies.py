@@ -5,12 +5,13 @@
 
 import requests
 import json
+import os
 from colorama import Fore, Style
 
 # ----------------------------------------------------------
-# 🔑 Paste your OpenRouter API key here
+# 🔑 OpenRouter API key from environment (set OPENROUTER_API_KEY)
 # ----------------------------------------------------------
-OPENROUTER_API_KEY = "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"  # ← Replace with your key
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 
 # ----------------------------------------------------------
 # 🧠 Function to get Ayurvedic remedies using Gemma 3 12B model
@@ -20,6 +21,9 @@ def get_ayurvedic_remedy(disease: str):
     Uses Google Gemma 3 12B model via OpenRouter API to get concise Ayurvedic remedies.
     """
     url = "https://openrouter.ai/api/v1/chat/completions"
+
+    if not OPENROUTER_API_KEY:
+        return "⚠️ Missing OPENROUTER_API_KEY. Please set it in environment."
 
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
