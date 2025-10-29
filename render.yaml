@@ -13,6 +13,8 @@ services:
         sync: false
       - key: GOOGLE_API_KEY
         sync: false
+      - key: MODEL_URL
+        sync: false
     healthCheckPath: /health
     disk:
       name: model-cache

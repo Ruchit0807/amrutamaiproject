@@ -17,6 +17,7 @@ import requests
 import json
 import re
 from typing import Optional
+import subprocess
 
 # Import our ML modules
 from efficientnet_pytorch import EfficientNet
@@ -34,7 +35,8 @@ app.add_middleware(
 )
 
 # Configuration
-MODEL_PATH = "best_efficientnet.pth"
+MODEL_PATH = os.getenv("MODEL_PATH", "best_efficientnet.pth")
+MODEL_URL = os.getenv("MODEL_URL", "")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyAFtMxYO0cN--eTlKMJObp9wdTI49ea5SM")
 
@@ -48,9 +50,45 @@ class_names = [
 ]
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def is_lfs_pointer(path: str) -> bool:
+    try:
+        with open(path, "rb") as f:
+            head = f.read(64)
+        return head.startswith(b"version https://git-lfs.github.com/spec/v1")
+    except Exception:
+        return False
+
+
+def ensure_model_file(path: str) -> None:
+    # If file missing or clearly an LFS pointer, try to fetch from MODEL_URL if provided
+    needs_fetch = False
+    if not os.path.exists(path):
+        needs_fetch = True
+    elif is_lfs_pointer(path):
+        needs_fetch = True
+
+    if needs_fetch:
+        if MODEL_URL:
+            resp = requests.get(MODEL_URL, stream=True, timeout=300)
+            resp.raise_for_status()
+            with open(path, "wb") as out:
+                for chunk in resp.iter_content(chunk_size=1024 * 1024):
+                    if chunk:
+                        out.write(chunk)
+        else:
+            raise RuntimeError(
+                "Model file is missing or is a Git LFS pointer. Set MODEL_URL env var to a direct download link for best_efficientnet.pth."
+            )
+
+
+# Ensure model file is present
+ensure_model_file(MODEL_PATH)
+
+# Build and load model
 model = EfficientNet.from_name('efficientnet-b0')
 model._fc = nn.Linear(model._fc.in_features, len(class_names))
-model.load_state_dict(torch.load(MODEL_PATH, map_location=device, weights_only=False))
+state = torch.load(MODEL_PATH, map_location=device, weights_only=False)
+model.load_state_dict(state)
 model.eval().to(device)
 
 transform = transforms.Compose([
