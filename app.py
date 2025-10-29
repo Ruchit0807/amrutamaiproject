@@ -50,7 +50,7 @@ class_names = [
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = EfficientNet.from_name('efficientnet-b0')
 model._fc = nn.Linear(model._fc.in_features, len(class_names))
-model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+model.load_state_dict(torch.load(MODEL_PATH, map_location=device, weights_only=False))
 model.eval().to(device)
 
 transform = transforms.Compose([
