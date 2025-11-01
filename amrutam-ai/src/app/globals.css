@@ -48,19 +48,3 @@ body {
   background: var(--color-background);
   color: var(--color-foreground);
 }
-
-/* Subtle float */
-@keyframes float-soft {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
-}
-.animate-float-soft { animation: float-soft 6s ease-in-out infinite; }
-
-/* Fade up on view */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.aos-in { animation: fade-up 500ms ease forwards; }
-.aos-init { opacity: 0; transform: translateY(12px); }

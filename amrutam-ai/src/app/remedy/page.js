@@ -1,8 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import WellnessBanner from "@/components/WellnessBanner";
-import InfoDialog from "@/components/InfoDialog";
+import { useMemo, useState, useEffect } from "react";
 
 export default function RemedyPage() {
   const [query, setQuery] = useState("");
@@ -11,7 +9,16 @@ export default function RemedyPage() {
   const [text, setText] = useState("");
   const [structured, setStructured] = useState(null);
   const [error, setError] = useState("");
-  const [dialog, setDialog] = useState({ open: false, title: "", content: null });
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!loading) return;
+    setProgress(0);
+    const id = setInterval(() => {
+      setProgress((p) => Math.min(p + Math.random() * 12 + 5, 95));
+    }, 300);
+    return () => clearInterval(id);
+  }, [loading]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +41,8 @@ export default function RemedyPage() {
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      setProgress(100);
+      setTimeout(() => setLoading(false), 300);
     }
   };
 
@@ -54,31 +62,33 @@ export default function RemedyPage() {
   }, [structured]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-24">
-      <h1 className="font-serif text-4xl text-gray-100">Find the Right Ayurvedic Remedy for You</h1>
-      <p className="mt-2 text-gray-200">Personalized suggestions rooted in classical Ayurveda to support your healing journey.</p>
+    <div className="max-w-4xl mx-auto px-4 py-16">
+      <h1 className="font-serif text-3xl text-white">Find the Right Ayurvedic Remedy for You</h1>
       <form onSubmit={onSubmit} className="mt-6 grid gap-3">
-        <label className="text-sm text-gray-200">Describe your symptoms or disease</label>
+        <label className="text-sm text-white">Describe your symptoms or disease</label>
         <textarea
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="e.g., dry itchy patches on elbows, redness, scaling"
-          className="min-h-28 rounded-2xl border border-accent/30 bg-secondary p-4 outline-none focus:ring-2 focus:ring-primary/50 text-neutral"
+          className="min-h-28 rounded-2xl border border-accent/20 bg-secondary/80 p-4 outline-none focus:ring-2 focus:ring-primary/50 text-amber-900"
         />
         {!loading ? (
           <button
             type="submit"
             disabled={!query.trim()}
-            className="justify-self-start rounded-full bg-accent text-secondary px-6 py-2 hover:bg-accent/90 disabled:opacity-50 shadow-sm"
+            className="justify-self-start rounded-full bg-accent text-secondary px-6 py-2 hover:bg-accent/90 disabled:opacity-50"
           >
             Get Remedies
           </button>
         ) : (
           <div className="justify-self-start w-full max-w-md" role="status" aria-live="polite">
-            <div className="loading-bar-track rounded-full bg-accent/20 h-3">
-              <div className="loading-bar-fill bg-accent rounded-full" />
+          <div className="loading-bar-track rounded-full bg-accent/20 h-3">
+              <div className="loading-bar-fill bg-accent rounded-full" style={{ width: `${Math.round(progress)}%` }} />
             </div>
-            <p className="text-sm text-gray-200 mt-2">{"Let's take a deep breath, then view results."}</p>
+            <p className="text-sm text-white mt-2">{"let's take a deep breath then look at results!"}</p>
+            <button type="button" className="mt-2 rounded-full bg-accent text-secondary px-4 py-1 text-sm" disabled>
+              {`Loading ${Math.round(progress)}%`}
+            </button>
           </div>
         )}
       </form>
@@ -87,17 +97,17 @@ export default function RemedyPage() {
 
       {structured && (
         <div className="mt-8 grid gap-4">
-          <div className="rounded-2xl bg-secondary p-6 border border-accent/20">
+          <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
             <h3 className="font-serif text-xl text-accent">Ayurvedic Guidance</h3>
-            <p className="text-neutral/90 mt-1"><span className="font-semibold">Condition:</span> {structured.disease}</p>
+            <p className="text-neutral/80 mt-1"><span className="font-semibold">Condition:</span> {structured.disease}</p>
             {structured.understanding && (
-              <p className="text-neutral/90 mt-1"><span className="font-semibold">Understanding:</span> {structured.understanding}</p>
+              <p className="text-neutral/80 mt-1"><span className="font-semibold">Understanding:</span> {structured.understanding}</p>
             )}
           </div>
           {structured.herbs?.length > 0 && (
-            <div className="rounded-2xl bg-secondary p-6 border border-accent/20">
+            <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
               <h3 className="font-serif text-xl text-accent">Herbal Remedies</h3>
-              <ul className="list-disc pl-6 mt-2 text-neutral/90">
+              <ul className="list-disc pl-6 mt-2 text-neutral/80">
                 {structured.herbs.map((h, i) => (
                   <li key={i}>{h}</li>
                 ))}
@@ -105,9 +115,9 @@ export default function RemedyPage() {
             </div>
           )}
           {structured.home_remedies?.length > 0 && (
-            <div className="rounded-2xl bg-secondary p-6 border border-accent/20">
+            <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
               <h3 className="font-serif text-xl text-accent">Home Remedies</h3>
-              <ul className="list-disc pl-6 mt-2 text-neutral/90">
+              <ul className="list-disc pl-6 mt-2 text-neutral/80">
                 {structured.home_remedies.map((h, i) => (
                   <li key={i}>{h}</li>
                 ))}
@@ -115,9 +125,9 @@ export default function RemedyPage() {
             </div>
           )}
           {structured.lifestyle?.length > 0 && (
-            <div className="rounded-2xl bg-secondary p-6 border border-accent/20">
+            <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
               <h3 className="font-serif text-xl text-accent">Lifestyle & Diet Tips</h3>
-              <ul className="list-disc pl-6 mt-2 text-neutral/90">
+              <ul className="list-disc pl-6 mt-2 text-neutral/80">
                 {structured.lifestyle.map((h, i) => (
                   <li key={i}>{h}</li>
                 ))}
@@ -128,62 +138,29 @@ export default function RemedyPage() {
       )}
 
       {!structured && text && (
-        <div className="mt-8 rounded-2xl bg-secondary p-6 border border-accent/20 whitespace-pre-wrap text-neutral">
+        <div className="mt-8 rounded-2xl bg-secondary p-5 border border-accent/10 whitespace-pre-wrap text-neutral/90">
           {text}
         </div>
       )}
 
-      <WellnessBanner title="Peaceful Healing" subtitle="Soothe the mind, nourish the skin, restore balance." className="mt-12" />
-      <div className="mt-6 grid md:grid-cols-4 gap-4">
-        <button type="button" onClick={() => setDialog({ open: true, title: "Dosha Balance", content: (
-          <div>
-            <p>Answer a few questions to gauge Vata–Pitta–Kapha tendencies.</p>
-            <ul className="list-disc pl-6 mt-2">
-              <li>Vata: dry skin, cold hands/feet, variable appetite.</li>
-              <li>Pitta: redness, sensitivity, warm body, strong appetite.</li>
-              <li>Kapha: oiliness, congestion, heaviness, sluggishness.</li>
-            </ul>
-          </div>
-        ) })} className="text-left rounded-2xl bg-secondary p-5 border border-accent/20 hover:border-accent/40">
+      {/* Wellness extras */}
+      <div className="mt-12 grid md:grid-cols-4 gap-4">
+        <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
           <h3 className="font-serif text-xl text-accent">Dosha Balance</h3>
-          <p className="text-neutral/90 mt-1">Answer a few questions to assess Vata–Pitta–Kapha balance. Coming soon.</p>
-        </button>
-        <button type="button" onClick={() => setDialog({ open: true, title: "Daily Dinacharya", content: (
-          <div>
-            <ul className="list-disc pl-6">
-              <li>Morning: tongue scraping, warm water, abhyanga (oil massage).</li>
-              <li>Midday: main meal, short walk, mindful breaths.</li>
-              <li>Evening: light dinner, screen-off ritual, sleep by 10 pm.</li>
-            </ul>
-          </div>
-        ) })} className="text-left rounded-2xl bg-secondary p-5 border border-accent/20 hover:border-accent/40">
+          <p className="text-neutral/80 mt-1">Answer a few questions to assess Vata-Pitta-Kapha balance. Coming soon.</p>
+        </div>
+        <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
           <h3 className="font-serif text-xl text-accent">Daily Dinacharya</h3>
-          <p className="text-neutral/90 mt-1">Simple morning and evening routines for resilient skin.</p>
-        </button>
-        <button type="button" onClick={() => setDialog({ open: true, title: "Food Guidelines", content: (
-          <div>
-            <ul className="list-disc pl-6">
-              <li>Prefer warm, freshly cooked meals; avoid processed foods.</li>
-              <li>Hydrate with warm water or herbal infusions.</li>
-              <li>Favor seasonal fruits/vegetables; reduce excessive sugar.</li>
-            </ul>
-          </div>
-        ) })} className="text-left rounded-2xl bg-secondary p-5 border border-accent/20 hover:border-accent/40">
+          <p className="text-neutral/80 mt-1">Simple morning and evening routine suggestions for skin health.</p>
+        </div>
+        <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
           <h3 className="font-serif text-xl text-accent">Food Guidelines</h3>
-          <p className="text-neutral/90 mt-1">Sattvic, seasonal foods and warm hydration guidance.</p>
-        </button>
-        <button type="button" onClick={() => setDialog({ open: true, title: "Breathwork", content: (
-          <div>
-            <ul className="list-disc pl-6">
-              <li>Nadi Shodhana: inhale 4, hold 4, exhale 6; 3–5 minutes.</li>
-              <li>Box Breathing: 4-4-4-4 cycles for calming.</li>
-              <li>Practice seated with a straight spine; stop if dizzy.</li>
-            </ul>
-          </div>
-        ) })} className="text-left rounded-2xl bg-secondary p-5 border border-accent/20 hover:border-accent/40">
+          <p className="text-neutral/80 mt-1">Sattvic, seasonal foods and hydration tips tailored to your condition.</p>
+        </div>
+        <div className="rounded-2xl bg-secondary p-5 border border-accent/10">
           <h3 className="font-serif text-xl text-accent">Breathwork</h3>
-          <p className="text-neutral/90 mt-1">2–5 minutes of Nadi Shodhana or Box Breathing to ease stress.</p>
-        </button>
+          <p className="text-neutral/80 mt-1">2–5 mins of Nadi Shodhana or Box Breathing to calm Pitta and stress.</p>
+        </div>
       </div>
 
       {(results.length > 0 || derivedCards.length > 0) && (
@@ -209,13 +186,9 @@ export default function RemedyPage() {
         </div>
       )}
 
-      <p className="mt-8 text-xs text-gray-300">
+      <p className="mt-8 text-xs text-white">
         Disclaimer: This AI tool provides general recommendations. Please consult a professional before starting any treatment.
       </p>
-
-      <InfoDialog open={dialog.open} onClose={() => setDialog({ open: false, title: "", content: null })} title={dialog.title}>
-        {dialog.content}
-      </InfoDialog>
     </div>
   );
 }

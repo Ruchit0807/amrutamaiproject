@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${inter.variable} font-sans antialiased bg-secondary text-neutral`}>
+      <body className={`${playfair.variable} ${inter.variable} font-sans antialiased bg-gradient-to-br from-secondary to-primary/20 text-neutral`}>
         <Navbar />
         <main className="min-h-[calc(100vh-200px)]">{children}</main>
         <Footer />

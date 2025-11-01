@@ -6,3 +6,6 @@ efficientnet_pytorch
 matplotlib
 numpy
 requests
+fastapi
+uvicorn[standard]
+python-multipart

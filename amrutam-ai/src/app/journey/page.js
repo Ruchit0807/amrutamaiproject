@@ -6,9 +6,9 @@ import { LuImage } from "react-icons/lu";
 
 export default function JourneyPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-24">
-      <h1 className="font-serif text-4xl text-gray-100">Choose Your Path to Wellness</h1>
-      <p className="text-gray-200 mt-2">Select how you wish to begin your journey with AMRUTAM AI.</p>
+    <div className="max-w-6xl mx-auto px-4 py-16">
+      <h1 className="font-serif text-4xl text-white">Choose Your Path to Wellness</h1>
+      <p className="text-white mt-2">Select how you wish to begin your journey with AMRUTAM AI.</p>
 
       <div className="mt-10 grid md:grid-cols-2 gap-6">
         <Link href="/remedy" className="group rounded-3xl bg-secondary border border-accent/10 p-8 hover:border-accent/30 transition-all">
@@ -26,7 +26,7 @@ export default function JourneyPage() {
         </Link>
       </div>
 
-      <p className="text-gray-300 mt-8">More powerful features are coming soon to elevate your wellness journey.</p>
+      <p className="text-white mt-8">More powerful features are coming soon to elevate your wellness journey.</p>
     </div>
   );
 }
